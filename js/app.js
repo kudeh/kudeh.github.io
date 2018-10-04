@@ -1,48 +1,56 @@
-$(function() {
-	var message = {
+var TxtType = function(el, toRotate, period) {
+        this.toRotate = toRotate;
+        this.el = el;
+        this.loopNum = 0;
+        this.period = parseInt(period, 10) || 2000;
+        this.txt = '';
+        this.tick();
+        this.isDeleting = false;
+    };
 
-		message: [
-			'solving problems.',
-			'developing software.',
-			'analysing data.',
-			'automating tasks.',
-			'learning.',
-			'python & javascript.'
-		],
-		counterS: 0,
-		counterL: 0,
-		deleteS: false,
+    TxtType.prototype.tick = function() {
+        var i = this.loopNum % this.toRotate.length;
+        var fullTxt = this.toRotate[i];
 
-		init: function() {
-			this.cacheElem();
-			this.type();
-		},
+        if (this.isDeleting) {
+        this.txt = fullTxt.substring(0, this.txt.length - 1);
+        } else {
+        this.txt = fullTxt.substring(0, this.txt.length + 1);
+        }
 
-		cacheElem: function() {
-			this.$text = $('.text');
-		},
+        this.el.innerHTML = '<span class="wrap">'+this.txt+'</span>';
 
-		type: function() {
-			var message = this.message[this.counterS],
-			that 	 = this,
-			speed= 0;
+        var that = this;
+        var delta = 200 - Math.random() * 100;
 
-			message = !this.deleteS ? message.slice(0, ++this.counterL) : message.slice(0, --this.counterL);
-			if(this.message[this.counterS] != message && !this.deleteS) {
-				this.$text.text(message);
-				speed = 90;
-			}
-			else {
-				this.deleteS = true;
-				speed = this.message[this.counterS] == message ? 1000 : 40;
-				this.$text.text(message);
-				if (message == '') {
-					this.deleteS = false;
-					this.counterS = this.counterS < this.message.length - 1 ? this.counterS + 1 : 0;
-				}
-			}
-			setTimeout(function(){that.type()}, speed);
-		}
-	};
-	message.init();
-});
+        if (this.isDeleting) { delta /= 2; }
+
+        if (!this.isDeleting && this.txt === fullTxt) {
+        delta = this.period;
+        this.isDeleting = true;
+        } else if (this.isDeleting && this.txt === '') {
+        this.isDeleting = false;
+        this.loopNum++;
+        delta = 500;
+        }
+
+        setTimeout(function() {
+        that.tick();
+        }, delta);
+    };
+
+    window.onload = function() {
+        var elements = document.getElementsByClassName('typewrite');
+        for (var i=0; i<elements.length; i++) {
+            var toRotate = elements[i].getAttribute('data-type');
+            var period = elements[i].getAttribute('data-period');
+            if (toRotate) {
+              new TxtType(elements[i], JSON.parse(toRotate), period);
+            }
+        }
+        // INJECT CSS
+        var css = document.createElement("style");
+        css.type = "text/css";
+        css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
+        document.body.appendChild(css);
+    };
