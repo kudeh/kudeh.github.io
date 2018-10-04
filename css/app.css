@@ -69,10 +69,15 @@ a {
 
 .resume {
    font-size: 1.5em;
-   border: 2px solid white;
-   background-color: black;
+   border: 5px solid white;
+   background-color: #b61924;
    padding: 10px;
    border-radius: 25px;
+}
+
+.resume:hover {
+  border: 5px solid black;
+  padding: 12px;
 }
 
 .resume a {
