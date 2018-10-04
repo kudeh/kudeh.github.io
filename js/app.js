@@ -2,12 +2,12 @@ $(function() {
 	var message = {
 
 		message: [
-
-			'web development;',
-			'good movies;',
-			'javascript;',
-			'styling;',
-			'to learn and build new stuff;'
+			'solving problems.',
+			'developing software.',
+			'analysing data.',
+			'automating tasks.',
+			'learning.',
+			'python & javascript.'
 		],
 		counterS: 0,
 		counterL: 0,
